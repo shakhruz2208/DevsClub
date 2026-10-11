@@ -2,6 +2,7 @@ import { BrowserRouter, Navigate, Route, Routes, useLocation } from 'react-route
 import { lazy, Suspense } from 'react'
 import { motion } from 'framer-motion'
 import ProtectedRoute from './components/ProtectedRoute'
+import AdminRoute from './components/AdminRoute'
 import TeacherProfile from './TeacherComponents/TeacherProfile'
 import StudentProfile from './StudentComponents/StudentProfile'
 import { AuthProvider } from './Providers/AuthProvider'
@@ -26,9 +27,9 @@ const TeacherArchive = lazy(() => import('./TeacherComponents/TeacherArchive'))
 const TeacherCourse = lazy(() => import('./TeacherComponents/TeacherCourse'))
 const TeacherGrades = lazy(() => import('./TeacherComponents/TeacherGrades'))
 const StudentGrades = lazy(() => import('./StudentComponents/StudentGrades'))
+const AdminDashboard = lazy(() => import('./AdminComponents/AdminDashboard'))
 
-// Fades+rises the whole page in on every route change.
-// Keying by pathname remounts the wrapper so each navigation re-animates.
+
 const PageFade = ({ children }) => {
   const location = useLocation()
   return (
@@ -61,6 +62,9 @@ const App = () => {
                     <Route path='/login' element={<Login />} />
 
                     <Route element={<ProtectedRoute />}>
+                      <Route element={<AdminRoute />}>
+                        <Route path='/admin' element={<AdminDashboard />} />
+                      </Route>
                       <Route path='/teacher-course' element={<TeacherCourse />} />
                       <Route path='/teacher-profile' element={<TeacherProfile />} />
                       <Route path='/student-profile' element={<StudentProfile />} />

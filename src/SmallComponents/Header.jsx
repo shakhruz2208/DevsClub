@@ -9,7 +9,7 @@ import LanguageSwitcher from "../components/LanguageSwitcher"
 
 const AvatarCircle = ({ avatarUrl, avatarLetter, role }) => (
     <NavLink
-        to={role === 'teacher' ? '/teacher-profile' : '/student-profile'}
+        to={role === 'teacher' ? '/teacher-profile' : role === 'admin' ? '/admin' : '/student-profile'}
         className="w-10 h-10 sm:w-11 sm:h-11 lg:w-12 lg:h-12 rounded-full shadow-[0_0_0_3px_rgba(99,102,241,0.25)] flex items-center justify-center overflow-hidden transition-transform hover:scale-105 shrink-0 bg-gradient-to-br from-indigo-700 to-purple-700"
     >
         {avatarUrl ? (
@@ -26,7 +26,9 @@ const Header = () => {
     const { isLight, toggleTheme } = useTheme()
     const [menuOpen, setMenuOpen] = useState(false)
 
-    const role = user?.teacher ? 'teacher' : 'student'
+    const role = user?.is_admin === true || user?.role === 'admin' || user?.account_role === 'admin'
+        ? 'admin'
+        : user?.teacher ? 'teacher' : 'student'
     const avatarUrl = resolveAvatarUrl(user?.profile_pic)
 
     const teacherLinks = [
@@ -41,8 +43,11 @@ const Header = () => {
         { name: t('nav_rating'), path: '/students-rating' },
         { name: t('nav_grades'), path: '/student-grades' }
     ]
+    const adminLinks = [
+        { name: 'Boshqaruv paneli', path: '/admin' }
+    ]
 
-    const currentLinks = role === 'teacher' ? teacherLinks : studentLinks
+    const currentLinks = role === 'admin' ? adminLinks : role === 'teacher' ? teacherLinks : studentLinks
     const avatarLetter = user?.full_name?.[0] || (role === 'teacher' ? 'T' : 'S')
 
     const linkClass = ({ isActive }) =>
